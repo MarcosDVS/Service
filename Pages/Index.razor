@@ -1,0 +1,72 @@
+﻿@page "/"
+@implements IDisposable
+
+<div id="carouselExample" class="carousel slide">
+    <div class="carousel-inner">
+        @for (int i = 0; i < ImageUrls.Count; i++)
+        {
+            <div class="carousel-item @(i == activeIndex ? "active" : "")">
+                <img src="@ImageUrls[i]" class="d-block w-100" alt="Image @i">
+            </div>
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" @onclick="PrevImage">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" @onclick="NextImage">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+@code {
+    private List<string> ImageUrls = new List<string>
+    {
+        "biblioteca.jpg",
+        "uteco2.jpg",
+        "uteco3.jpg"
+    };
+
+    private int activeIndex = 0;
+    private System.Timers.Timer timer;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // Inicia el temporizador
+        timer = new System.Timers.Timer(5000); // 5000 ms = 5 segundos
+        timer.Elapsed += OnTimerElapsed;
+        timer.AutoReset = true;
+        timer.Enabled = true;
+    }
+
+    private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        InvokeAsync(() =>
+        {
+            NextImage();
+            StateHasChanged(); // Redibuja el componente
+        });
+    }
+
+    private void NextImage()
+    {
+        activeIndex = (activeIndex + 1) % ImageUrls.Count;
+    }
+
+    private void PrevImage()
+    {
+        activeIndex = (activeIndex - 1 + ImageUrls.Count) % ImageUrls.Count;
+    }
+
+    public void Dispose()
+    {
+        // Detiene el temporizador cuando el componente es destruido
+        if (timer != null)
+        {
+            timer.Stop();
+            timer.Dispose();
+        }
+    }
+}

@@ -1,0 +1,169 @@
+@page "/service"
+@implements IDisposable
+@attribute [Authorize]
+
+<style>
+    .btnCard:hover {
+        background-color: var(--bs-info) !important;
+        color: white;
+    }
+</style>
+
+<div class="row mt-1">
+    <div class="col-12 px-0 text-center">
+        <div class="card w-100 bg-light text-dark p-3">
+            <div class="">
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < ImageUrls.Count; i++)
+                        {
+                            <div class="carousel-item @(i == activeIndex ? "active" : "")">
+                                <img src="@ImageUrls[i]" class="d-block w-100" alt="Image @i">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" @onclick="PrevImage">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" @onclick="NextImage">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3 px-0 text-center">
+        <div class="card btnCard bg-light text-dark p-3" style="cursor: pointer;" @onclick="TutoriaGo">
+            <div class="card-body">
+                <h5 class="card-title">Tutorias</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 px-0 text-center">
+        <div class="card btnCard bg-light text-dark p-3" style="cursor: pointer;" @onclick="BecaGo">
+            <div class="card-body">
+                <h5 class="card-title">Becas</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 px-0 text-center">
+        <div class="card btnCard bg-light text-dark p-3" style="cursor: pointer;" @onclick="SaludGo">
+            <div class="card-body">
+                <h5 class="card-title">Salud</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 px-0 text-center">
+        <div class="card btnCard bg-light text-dark p-3" style="cursor: pointer;" @onclick="ConsultaGo">
+            <div class="card-body">
+                <h5 class="card-title">Cons. Psicolo.</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-4 px-0 text-center">
+        <div class="card bg-light text-dark p-3">
+            <div class="card-body">
+                <h5 class="card-title">Conócenos</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 px-0 text-center">
+        <div class="card bg-light text-dark p-3">
+            <div class="card-body">
+                <h5 class="card-title">Infórmate</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 px-0 text-center">
+        <div class="card bg-light text-dark p-3">
+            <div class="card-body">
+                <h5 class="card-title">Contáctanos</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <footer class="w-100 bg-secondary text-center text-uppercase fw-bold py-3 px-0">
+        Todos los derechos reservados
+    </footer>
+</div>
+
+@code {
+    private List<string> ImageUrls = new List<string>
+    {
+        "biblioteca.jpg",
+        "uteco2.jpg",
+        "uteco3.jpg"
+    };
+
+    private int activeIndex = 0;
+    private System.Timers.Timer timer;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // Inicia el temporizador
+        timer = new System.Timers.Timer(5000); // 5000 ms = 5 segundos
+        timer.Elapsed += OnTimerElapsed;
+        timer.AutoReset = true;
+        timer.Enabled = true;
+    }
+
+    private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        InvokeAsync(() =>
+        {
+            NextImage();
+            StateHasChanged(); // Redibuja el componente
+        });
+    }
+
+    private void NextImage()
+    {
+        activeIndex = (activeIndex + 1) % ImageUrls.Count;
+    }
+
+    private void PrevImage()
+    {
+        activeIndex = (activeIndex - 1 + ImageUrls.Count) % ImageUrls.Count;
+    }
+
+    public void Dispose()
+    {
+        // Detiene el temporizador cuando el componente es destruido
+        if (timer != null)
+        {
+            timer.Stop();
+            timer.Dispose();
+        }
+    }
+
+    public void TutoriaGo()
+    {
+        urlHelper.NavigateTo("tutoria");
+    }
+
+    public void BecaGo()
+    {
+        urlHelper.NavigateTo("beca");
+    }
+
+    public void ConsultaGo()
+    {
+        urlHelper.NavigateTo("psicologia");
+    }
+
+    public void SaludGo()
+    {
+        urlHelper.NavigateTo("salud");
+    }
+}

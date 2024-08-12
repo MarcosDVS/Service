@@ -1,0 +1,401 @@
+@page "/salud"
+
+<div class="modal" style="display: @(showCard ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 710px;">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><b>@TituloForm</b></h5>
+                <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close" @onclick="CloseCard">
+                    <span aria-hidden="true" class="oi oi-x"></span>
+                </button>
+            </div>
+
+            <EditForm Model="request" OnValidSubmit="Send">
+                <div class="modal-body">
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos personales</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-person"></span>
+                                    <label>Nombre</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Nombre" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Apellidos</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Apellidos" required/>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row ">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-badge"></span>
+                                    <label>Matrícula</label>
+                                </span>
+                                <input type="text"  class="form-control" 
+                                   @bind-value="request.Matricula" required />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Sexo</label>
+                                </span>
+                                <select class="form-select" @bind="request.Sexo" required>
+                                    <option readonly>Seleccione un sexo</option>
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Hombre">Hombre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Telefono</label>
+                                </span>
+                                <input type="tel" class="form-control" 
+                                    @bind-value="request.Telefono" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Fecha/Nacimiento</label>
+                                </span>
+                                <input type="date" class="form-control" 
+                                    @bind-value="request.FechaNacimiento" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Dirección</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Direccion" required/>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos de la cita</h6>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Fecha/Consuta</label>
+                                </span>
+                                <input type="date" class="form-control" 
+                                    @bind-value="request.FechaConsulta" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Hora</label>
+                                </span>
+                                <input type="time" class="form-control" 
+                                    @bind-value="request.Hora" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Aréa</label>
+                                </span>
+                                <select class="form-select" @bind="request.Area" required>
+                                    <option readonly>Seleccione un área</option>
+                                    <option value="Medicina General">Medicina General</option>
+                                    <option value="Enfermería">Enfermería</option>
+                                    <option value="Psicología">Psicología</option>
+                                    <option value="Odontología">Odontología</option>
+                                    <option value="Nutrición">Nutrición</option>
+                                    <option value="Fisioterapia">Fisioterapia</option>
+                                    <option value="Salud Reproductiva">Salud Reproductiva</option>
+                                    <option value="Oftalmología">Oftalmología</option>
+                                    <option value="Audiología">Audiología</option>
+                                    <option value="Farmacia">Farmacia</option>
+                                    <option value="Laboratorio Clínico">Laboratorio Clínico</option>
+                                    <option value="Pediatría">Pediatría</option>
+                                    <option value="Salud Ocupacional">Salud Ocupacional</option>
+                                    <option value="Educación para la Salud">Educación para la Salud</option>
+                                    <option value="Urgencias Médicas">Urgencias Médicas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="modal-footer bg-dark text-white">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCard">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="card col-12">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Botones de acción -->
+                <div>
+                    <button class="btn btn-outline-success d-print-none" @onclick="ShowCard">
+                        <span class="oi oi-plus"></span>
+                    </button>
+                    @if(Role != "Student")
+                    {
+                        <button class="btn btn-outline-primary d-print-none" 
+                            @onclick="async ()=>{await PrintPageAsync();}">
+                            <span class="oi oi-print"></span>
+                        </button>
+                    }
+                    <button class="btn btn-outline-danger d-print-none" 
+                        @onclick='()=>{urlHelper.NavigateTo("/service");}'>
+                        <span class="oi oi-arrow-thick-left"></span>
+                    </button>
+                </div>
+                <!-- Encabezado -->
+                <h2 class="card-title mb-0">Consultas Medicas</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-4">
+                    <div class="input-group d-print-none">
+                        <input type="text" class="form-control border-0 border-bottom" 
+                        placeholder="Buscar por nombre" @bind="Filtro">
+                        <button class="btn btn-outline input-group-text border-0 bg-white" 
+                            type="button" id="button-addon2" @onclick="()=>CargarDatos()">
+                            <span class="oi oi-magnifying-glass text-black"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-12 mt-2">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Nombre completo</th>
+                            <th>Matrícula</th>
+                            <th>Sexo</th>
+                            <th>Telefono</th>
+                            <th>Fecha/Nacimiento</th>
+                            <th>Dirección</th>
+                            <th>Fecha/Consulta</th>
+                            <th>Hora</th>
+                            <th>Aréa</th>
+                            @if(Role != "Student")
+                            {
+                                <th class="d-print-none">...</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Row in CitaMedicas)
+                        {
+                            <tr>
+                                <td>@Row.Nombre @Row.Apellidos</td>
+                                <td>@Row.Matricula</td>
+                                <td>@Row.Sexo</td>
+                                <td>@FormatPhoneNumber(Row.Telefono)</td>
+                                <td>@Row.FechaNacimiento.ToShortDateString()</td>
+                                <td>@Row.Direccion</td>
+                                <td>@Row.FechaConsulta.ToLongDateString()</td>
+                                <td>@Row.Hora.ToString("t")</td>
+                                <td>@Row.Area</td>
+                                @if(Role != "Student")
+                                {
+                                    <td class="d-print-none">
+                                        <button @onclick="()=>Seleccionar(Row.Id)"
+                                            class="btn btn-outline-warning">
+                                            <span class="oi oi-pencil"></span>
+                                        </button>
+                                        <button @onclick="()=>Eliminar(Row)"
+                                            class="btn btn-outline-danger">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+@code {
+    public string TituloForm => request.Id == 0 ? 
+    "Solicitar Beca" : "Modificar Solicitud";
+    
+    public string Filtro { get; set; } = "";
+    public bool ShowForm { get; set; } = false;
+    public List<CitaMedicaResponse> CitaMedicas { get; set; } = new();
+    public CitaMedicaRequest request { get; set; } = new();
+    public bool showCard { get; set; } = false;
+    public string Message { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string SurName { get; set; } = "";
+    public string Matricula { get; set; } = "";
+    public string Role { get; set; } = "";
+    private bool isTrabajando = false;
+
+    private string FormatPhoneNumber(string? phoneNumber)
+    {
+         // Verifica si phoneNumber es null
+        if (phoneNumber != null && phoneNumber.Length == 10)
+        {
+            // Formatea el número telefónico
+            return $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si phoneNumber es null o no tiene la longitud esperada
+            return phoneNumber;
+        }
+    }
+    void ShowCard()
+    {
+        if(Role=="Student")
+        {
+            request.Nombre=Name;
+            request.Apellidos=SurName;
+            request.Matricula=Matricula;
+        }
+        showCard = true;
+    }
+
+    void CloseCard()
+    {
+        request  = new CitaMedicaRequest();
+        showCard = false;
+    }
+
+    async Task CargarDatos()
+    {
+        var resultado = await citaMedicaServices.Consultar(Filtro);
+        
+        if (resultado.Success)
+        {
+            if (Role == "Student")
+            {
+                // Filtra por la propiedad Matricula si el rol es "Student"
+                CitaMedicas = resultado.Data!
+                    .Where(u => u.Matricula == Matricula)
+                    .ToList();
+            }
+            else
+            {
+                // Si no es "Student", carga todas las tutorías
+                CitaMedicas = resultado.Data!;
+            }
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el estado de autenticación
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        // Verifica si el usuario está autenticado
+        if (user.Identity.IsAuthenticated)
+        {
+            // Extrae los valores de los reclamos y asigna las propiedades
+            Role = user.FindFirst(ClaimTypes.Role)?.Value ?? "";
+            Name = user.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            SurName = user.FindFirst(ClaimTypes.Surname)?.Value ?? "";
+            Matricula = user.FindFirst(ClaimTypes.SerialNumber)?.Value ?? "";
+        }
+
+        // Cargar los datos inicialmente
+        await CargarDatos();
+    }
+
+
+    void Cancelar()
+    {
+        request  = new CitaMedicaRequest();
+        showCard = false;
+    }
+    public async Task Send()
+    {
+        if(request.Id == 0)
+        {
+            //Debo registrar el contacto..
+            var r = await citaMedicaServices.Crear(request);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //Debo solicitar modificar el contacto...
+            var r = await citaMedicaServices.Modificar(request);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+    }
+
+    public void Seleccionar(int Id)
+    {
+        showCard = true;
+        request = CitaMedicas
+        .Where(c => c.Id == Id)
+        .Select(c => c.ToRequest())
+        .FirstOrDefault() ?? new CitaMedicaRequest();
+    }
+    public async Task Eliminar(CitaMedicaResponse item)
+    {
+        var resultado = await citaMedicaServices.Eliminar(item.ToRequest());
+        if (resultado.Success)
+        {
+            await CargarDatos();
+            StateHasChanged();
+        }
+    }
+
+    private async Task PrintPageAsync()
+    {
+        // Llama a la función JavaScript para imprimir la página
+        await JSRuntime.InvokeVoidAsync("printPage");
+    }
+
+}

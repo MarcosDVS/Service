@@ -1,0 +1,365 @@
+@page "/psicologia"
+
+<div class="modal" style="display: @(showCard ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 650px;">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><b>@TituloForm</b></h5>
+                <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close" @onclick="CloseCard">
+                    <span aria-hidden="true" class="oi oi-x"></span>
+                </button>
+            </div>
+
+            <EditForm Model="request" OnValidSubmit="Send">
+                <div class="modal-body">
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos personales</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-person"></span>
+                                    <label>Nombre</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Nombre" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Apellidos</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Apellidos" required/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-badge"></span>
+                                    <label>Matrícula</label>
+                                </span>
+                                <input type="text"  class="form-control" 
+                                    @bind-value="request.Matricula" required />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Sexo</label>
+                                </span>
+                                <select class="form-select" @bind="request.Sexo">
+                                    <option readonly>seleccione un sexo</option>
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Hombre">Hombre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos de la cíta</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Edad</label>
+                                </span>
+                                <input type="number" class="form-control" 
+                                       @bind-value="request.Edad" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Telefono</label>
+                                </span>
+                                <input type="tel" class="form-control" 
+                                    @bind-value="request.Telefono" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Fecha</label>
+                                </span>
+                                <input type="date" class="form-control" 
+                                    @bind-value="request.Fecha" required />
+                            </div>
+                        </div>
+                        <div class="col text-end">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-person"></span>
+                                    <label>Hora</label>
+                                </span>
+                                <input type="time" class="form-control" @bind-value="request.Hora" required />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-dark text-white">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCard">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Agendar</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="card col-12">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Botones de acción -->
+                <div>
+                    <button class="btn btn-outline-success d-print-none" @onclick="ShowCard">
+                        <span class="oi oi-plus"></span>
+                    </button>
+                    @if(Role != "Student")
+                    {
+                        <button class="btn btn-outline-primary d-print-none" 
+                            @onclick="async ()=>{await PrintPageAsync();}">
+                            <span class="oi oi-print"></span>
+                        </button>
+                    }
+                    <button class="btn btn-outline-danger d-print-none" 
+                        @onclick='()=>{urlHelper.NavigateTo("/service");}'>
+                        <span class="oi oi-arrow-thick-left"></span>
+                    </button>
+                </div>
+                <!-- Encabezado -->
+                <h2 class="card-title mb-0">Consultas Agendadas</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-4">
+                    <div class="input-group d-print-none">
+                        <input type="text" class="form-control border-0 border-bottom" 
+                        placeholder="Buscar por nombre" @bind="Filtro">
+                        <button class="btn btn-outline input-group-text border-0 bg-white" 
+                            type="button" id="button-addon2" @onclick="()=>CargarDatos()">
+                            <span class="oi oi-magnifying-glass text-black"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-12 mt-2">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Nombre completo</th>
+                            <th>Matrícula</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th>Telefono</th>
+                            <th>Fecha</th>
+                            @if(Role != "Student")
+                            {
+                                <th class="d-print-none">...</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Row in Consultas)
+                        {
+                            <tr>
+                                <td>@Row.Nombre @Row.Apellidos</td>
+                                <td>@Row.Matricula</td>
+                                <td>@Row.Sexo</td>
+                                <td>@Row.Edad</td>
+                                <td>@FormatPhoneNumber(Row.Telefono)</td>
+                                <td>
+                                    @Row.Fecha.ToLongDateString()
+                                    @Row.Hora.ToString("t")
+                                </td>
+                                @if(Role != "Student")
+                                {
+                                    <td class="d-print-none">
+                                        <button @onclick="()=>Seleccionar(Row.Id)"
+                                            class="btn btn-outline-warning">
+                                            <span class="oi oi-pencil"></span>
+                                        </button>
+                                        <button @onclick="()=>Eliminar(Row)"
+                                            class="btn btn-outline-danger">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+@code {
+    public string TituloForm => request.Id == 0 ? 
+    "Agendar Consulta" : "Modificar Consulta";
+
+    public string Filtro { get; set; } = "";
+    public bool ShowForm { get; set; } = false;
+    public List<ConsultaResponse> Consultas { get; set; } = new();
+    public ConsultaRequest request { get; set; } = new();
+    public bool showCard { get; set; } = false;
+    public string Message { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string SurName { get; set; } = "";
+    public string Matricula { get; set; } = "";
+    public string Role { get; set; } = "";
+
+    private string FormatPhoneNumber(string phoneNumber)
+    {
+         // Verifica si phoneNumber es null
+        if (phoneNumber != null && phoneNumber.Length == 10)
+        {
+            // Formatea el número telefónico
+            return $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si phoneNumber es null o no tiene la longitud esperada
+            return phoneNumber;
+        }
+    }
+    @* private string FormatCustomerId(string customerId)
+    {
+        // Verifica si el número telefónico tiene la longitud esperada
+        if (customerId != null && customerId.Length == 11)
+        {
+            // Formatea el número telefónico
+            return $"{customerId.Substring(0, 3)}-{customerId.Substring(3, 7)}-{customerId.Substring(10)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si no tiene la longitud esperada
+            return customerId;
+        }
+    } *@
+    void ShowCard()
+    {
+        if(Role=="Student")
+        {
+            request.Nombre=Name;
+            request.Apellidos=SurName;
+            request.Matricula=Matricula;
+        }
+        showCard = true;
+    }
+
+    void CloseCard()
+    {
+        request  = new ConsultaRequest();
+        showCard = false;
+    }
+
+    async Task CargarDatos()
+    {
+        var resultado = await consultaServices.Consultar(Filtro);
+        
+        if (resultado.Success)
+        {
+            if (Role == "Student")
+            {
+                // Filtra por la propiedad Matricula si el rol es "Student"
+                Consultas = resultado.Data?
+                    .Where(u => u.Matricula == Matricula)
+                    .ToList();
+            }
+            else
+            {
+                // Si no es "Student", carga todas las tutorías
+                Consultas = resultado.Data!;
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el estado de autenticación
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        // Verifica si el usuario está autenticado
+        if (user.Identity.IsAuthenticated)
+        {
+            // Extrae los valores de los reclamos y asigna las propiedades
+            Role = user.FindFirst(ClaimTypes.Role)?.Value ?? "";
+            Name = user.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            SurName = user.FindFirst(ClaimTypes.Surname)?.Value ?? "";
+            Matricula = user.FindFirst(ClaimTypes.SerialNumber)?.Value ?? "";
+        }
+
+        // Cargar los datos inicialmente
+        await CargarDatos();
+    }
+
+    void Cancelar()
+    {
+        request  = new ConsultaRequest();
+        showCard = false;
+    }
+    public async Task Send()
+    {
+        if(request.Id == 0)
+        {
+            //Debo registrar el contacto..
+            var r = await consultaServices.Crear(request);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //Debo solicitar modificar el contacto...
+            var r = await consultaServices.Modificar(request);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+    }
+
+    public void Seleccionar(int Id)
+    {
+        showCard = true;
+        request = Consultas
+        .Where(c => c.Id == Id)
+        .Select(c => c.ToRequest())
+        .FirstOrDefault() ?? new ConsultaRequest();
+    }
+    public async Task Eliminar(ConsultaResponse item)
+    {
+        var resultado = await consultaServices.Eliminar(item.ToRequest());
+        if (resultado.Success)
+        {
+            await CargarDatos();
+            StateHasChanged();
+        }
+    }
+
+    private async Task PrintPageAsync()
+    {
+        // Llama a la función JavaScript para imprimir la página
+        await JSRuntime.InvokeVoidAsync("printPage");
+    }
+}

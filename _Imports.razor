@@ -1,0 +1,27 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Service
+@using Service.Data.Services
+@using Service.Shared
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using Service.Data.Model
+@using Service.Data.Request
+@using Service.Data.Response
+
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager urlHelper;
+@inject IUsuarioServices usuarioServices
+@inject ITutoriaServices tutoriaServices;
+@inject IConsultaServices consultaServices;
+@inject IBecaServices becaServices;
+@inject ICitaMedicaServices citaMedicaServices;

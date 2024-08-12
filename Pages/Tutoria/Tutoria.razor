@@ -1,0 +1,382 @@
+@page "/tutoria"
+@attribute [Authorize]
+
+<div class="modal" style="display: @(showCard ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 650px;">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><b>@TituloForm</b></h5>
+                <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close" @onclick="CloseCard">
+                    <span aria-hidden="true" class="oi oi-x"></span>
+                </button>
+            </div>
+
+            <EditForm Model="tutoriaRequest" OnValidSubmit="Send">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="modal-body">
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos personales</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-person"></span>
+                                    <label>Nombre</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="tutoriaRequest.Nombre" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Apellidos</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="tutoriaRequest.Apellidos" required/>
+                            </div>
+                        </div>
+                        <div class="form-group input-group mb-3">
+                            <span class="input-group-text bg-white text-black fw-bold">
+                                <span class="oi oi-badge"></span>
+                                <label>Matrícula</label>
+                            </span>
+                            <input type="text"  class="form-control" 
+                               @bind-value="tutoriaRequest.Matricula" required />
+                        </div>
+
+                    </div>
+
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos de la tutoría</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Asignatura</label>
+                                </span>
+                                <select class="form-select" @bind="tutoriaRequest.Asignatura">
+                                    <option readonly>Asignaturas</option>
+                                    <option value="Matemática">Matemática</option>
+                                    <option value="Programación">Programación</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Horario</label>
+                                </span>
+                                <input type="time" class="form-control" 
+                                    @bind-value="tutoriaRequest.Hora" required
+                                    min="08:00" max="20:00" @oninput="ValidarHorario"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Días disponibles</label>
+                                </span>
+                                <select class="form-select" @bind="tutoriaRequest.Dia">
+                                    <option value="Lunes">Lunes</option>
+                                    <option value="Martes">Martes</option>
+                                    <option value="Miercoles">Miercoles</option>
+                                    <option value="Jueves">Jueves</option>
+                                    <option value="Viernes">Viernes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col text-end">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-person"></span>
+                                    <label>Tutor</label>
+                                </span>
+                                <select class="form-select" @bind="tutoriaRequest.Tutor">
+                                    <option readonly>Seleccione un tutor</option>
+                                    <option value="Fulano">Fulano</option>
+                                    <option value="Martin">Martin</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-dark text-white">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCard">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Agendar</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="card col-12">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Botones de acción -->
+                <div>
+                    <button class="btn btn-outline-success d-print-none" @onclick="ShowCard">
+                        <span class="oi oi-plus"></span>
+                    </button>
+                    @if(Role != "Student")
+                    {
+                        <button class="btn btn-outline-primary d-print-none" 
+                            @onclick="async ()=>{await PrintPageAsync();}">
+                            <span class="oi oi-print"></span>
+                        </button>
+                    }
+                    <button class="btn btn-outline-danger d-print-none" 
+                        @onclick='()=>{urlHelper.NavigateTo("/service");}'>
+                        <span class="oi oi-arrow-thick-left"></span>
+                    </button>
+                </div>
+                <!-- Encabezado -->
+                <h2 class="card-title mb-0">Tutorías Agendadas</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-4">
+                    <div class="input-group d-print-none">
+                        <input type="text" class="form-control border-0 border-bottom" 
+                        placeholder="Buscar por nombre" @bind="Filtro">
+                        <button class="btn btn-outline input-group-text border-0 bg-white" 
+                            type="button" id="button-addon2" @onclick="()=>CargarDatos()">
+                            <span class="oi oi-magnifying-glass text-black"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-12 mt-2">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Nombre completo</th>
+                            <th>Matrícula</th>
+                            <th>Tutor</th>
+                            <th>Asignatura</th>
+                            <th>Horario</th>
+                            @if(Role != "Student")
+                            {
+                                <th class="d-print-none">...</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Row in Tutorias)
+                        {
+                            <tr>
+                                <td>@Row.Nombre @Row.Apellidos</td>
+                                <td>@Row.Matricula</td>
+                                <td>@Row.Asignatura</td>
+                                <td>@Row.Tutor</td>
+                                <td>@Row.Dia @Row.Hora.ToString("t")</td>
+                                @if(Role != "Student")
+                                {
+                                    <td class="d-print-none">
+                                        <button @onclick="()=>Seleccionar(Row.Id)"
+                                            class="btn btn-outline-warning">
+                                            <span class="oi oi-pencil"></span>
+                                        </button>
+                                        <button @onclick="()=>Eliminar(Row)"
+                                            class="btn btn-outline-danger">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+@code {
+    public string TituloForm => tutoriaRequest.Id == 0 ? 
+    "Agendar Tutoria" : "Modificar Tutoria";
+    
+    public string Filtro { get; set; } = "";
+    public bool ShowForm { get; set; } = false;
+    public List<TutoriaResponse> Tutorias { get; set; } = new();
+    public TutoriaRequest tutoriaRequest { get; set; } = new();
+    public bool showCard { get; set; } = false;
+    public string Message { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string SurName { get; set; } = "";
+    public string Matricula { get; set; } = "";
+    public string Role { get; set; } = "";
+
+    private void ValidarHorario(ChangeEventArgs e)
+    {
+        var horaSeleccionada = TimeSpan.Parse(e.Value.ToString());
+
+        // Definir los intervalos permitidos
+        var inicioMañana = new TimeSpan(8, 0, 0);
+        var finMañana = new TimeSpan(11, 0, 0);
+        var inicioTarde = new TimeSpan(14, 0, 0);
+        var finTarde = new TimeSpan(20, 0, 0);
+
+        // Validar si la hora seleccionada está dentro de los rangos permitidos
+        if ((horaSeleccionada >= inicioMañana && horaSeleccionada <= finMañana) ||
+            (horaSeleccionada >= inicioTarde && horaSeleccionada <= finTarde))
+        {
+            tutoriaRequest.Hora = DateTime.Today.Add(horaSeleccionada);
+        }
+        else
+        {
+            // Si no está en el rango permitido, puedes mostrar un mensaje de error o resetear el valor
+            tutoriaRequest.Hora = DateTime.Today.Add(inicioMañana);
+        }
+    }
+    @* private string FormatPhoneNumber(string phoneNumber)
+    {
+         // Verifica si phoneNumber es null
+        if (phoneNumber != null && phoneNumber.Length == 10)
+        {
+            // Formatea el número telefónico
+            return $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si phoneNumber es null o no tiene la longitud esperada
+            return phoneNumber;
+        }
+    }
+    private string FormatCustomerId(string customerId)
+    {
+        // Verifica si el número telefónico tiene la longitud esperada
+        if (customerId != null && customerId.Length == 11)
+        {
+            // Formatea el número telefónico
+            return $"{customerId.Substring(0, 3)}-{customerId.Substring(3, 7)}-{customerId.Substring(10)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si no tiene la longitud esperada
+            return customerId;
+        }
+    } *@
+    void ShowCard()
+    {
+        if(Role=="Student")
+        {
+            tutoriaRequest.Nombre=Name;
+            tutoriaRequest.Apellidos=SurName;
+            tutoriaRequest.Matricula=Matricula;
+        }
+        showCard = true;
+    }
+
+    void CloseCard()
+    {
+        tutoriaRequest  = new TutoriaRequest();
+        showCard = false;
+    }
+
+    async Task CargarDatos()
+    {
+        var resultado = await tutoriaServices.Consultar(Filtro);
+        
+        if (resultado.Success)
+        {
+            if (Role == "Student")
+            {
+                // Filtra por la propiedad Matricula si el rol es "Student"
+                Tutorias = resultado.Data?
+                    .Where(u => u.Matricula == Matricula)
+                    .ToList();
+            }
+            else
+            {
+                // Si no es "Student", carga todas las tutorías
+                Tutorias = resultado.Data!;
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el estado de autenticación
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        // Verifica si el usuario está autenticado
+        if (user.Identity.IsAuthenticated)
+        {
+            // Extrae los valores de los reclamos y asigna las propiedades
+            Role = user.FindFirst(ClaimTypes.Role)?.Value ?? "";
+            Name = user.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            SurName = user.FindFirst(ClaimTypes.Surname)?.Value ?? "";
+            Matricula = user.FindFirst(ClaimTypes.SerialNumber)?.Value ?? "";
+        }
+
+        // Cargar los datos inicialmente
+        await CargarDatos();
+    }
+
+    void Cancelar()
+    {
+        tutoriaRequest  = new TutoriaRequest();
+        showCard = false;
+    }
+    public async Task Send()
+    {
+        if(tutoriaRequest.Id == 0)
+        {
+            //Debo registrar el contacto..
+            var r = await tutoriaServices.Crear(tutoriaRequest);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //Debo solicitar modificar el contacto...
+            var r = await tutoriaServices.Modificar(tutoriaRequest);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+    }
+
+    public void Seleccionar(int Id)
+    {
+        showCard = true;
+        tutoriaRequest = Tutorias
+        .Where(c => c.Id == Id)
+        .Select(c => c.ToRequest())
+        .FirstOrDefault() ?? new TutoriaRequest();
+    }
+    public async Task Eliminar(TutoriaResponse item)
+    {
+        var resultado = await tutoriaServices.Eliminar(item.ToRequest());
+        if (resultado.Success)
+        {
+            await CargarDatos();
+            StateHasChanged();
+        }
+    }
+
+    private async Task PrintPageAsync()
+    {
+        // Llama a la función JavaScript para imprimir la página
+        await JSRuntime.InvokeVoidAsync("printPage");
+    }
+}

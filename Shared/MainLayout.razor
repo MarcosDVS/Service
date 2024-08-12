@@ -1,0 +1,74 @@
+﻿@using Test.Authentication
+@inject AuthenticationStateProvider authStateProvider
+@inherits LayoutComponentBase
+
+<PageTitle>Service UTECO</PageTitle>
+
+<div class="page">
+    <AuthorizeView>
+        <Authorized>
+            <div class="sidebar d-print-none">
+                <NavMenu />
+            </div>
+        </Authorized>
+    </AuthorizeView>  
+
+    <main>
+        <div class="top-row d-flex justify-content-between px-5 d-print-none"
+        style="background-image: linear-gradient(180deg, #0d2a11 0%, #035000 70%);">
+            <div class="fw-bold h2 mt-2 text-white">
+                <img src="logo_UTECO.jpeg" class="rounded-circle img-fluid img-thumbnail" style="width: 90px;">
+                UTECO
+            </div>
+            <div>
+                <AuthorizeView>
+                    <Authorized>
+                        <a class="me-3 text-white fw-bold">@Name @SurName @Matricula</a>
+                        <a class="me-3 text-white fw-bold" href="javascript:void(0)" @onclick="Logout">
+                            <span aria-hidden="true" class="oi oi-account-logout"></span> LogOut
+                        </a>
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="login" class="me-3 text-white fw-bold">
+                            <span aria-hidden="true" class="oi oi-account-login"></span> Login
+                        </a>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div> 
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code
+{
+    private async Task Logout()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        urlHelper.NavigateTo("/", true);
+    }
+
+    public string Name { get; set; } = "";
+    public string SurName { get; set; } = "";
+    public string Matricula { get; set; } = "";
+    protected override async Task OnInitializedAsync()
+    {        
+        // Obtener el estado de autenticación
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        // Verifica si el usuario está autenticado
+        if (user.Identity.IsAuthenticated)
+        {
+            // Extrae los valores de los reclamos y asigna las propiedades
+            // Role = user.FindFirst(ClaimTypes.Role)?.Value ?? "";
+            Name = user.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            SurName = user.FindFirst(ClaimTypes.Surname)?.Value ?? "";
+            Matricula = user.FindFirst(ClaimTypes.SerialNumber)?.Value ?? "";
+        }
+    }
+}

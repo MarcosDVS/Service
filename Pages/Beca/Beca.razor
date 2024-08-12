@@ -1,0 +1,475 @@
+@page "/beca"
+
+<div class="modal" style="display: @(showCard ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 710px;">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><b>Solicitud de beca</b></h5>
+                <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close" @onclick="CloseCard">
+                    <span aria-hidden="true" class="oi oi-x"></span>
+                </button>
+            </div>
+
+            <EditForm Model="request" OnValidSubmit="Send">
+                <div class="modal-body">
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos personales</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <span class="oi oi-person"></span>
+                                    <label>Nombre</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Nombre" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Apellidos</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Apellidos" required/>
+                            </div>
+                        </div>
+                        <div class="form-group input-group mb-3">
+                            <span class="input-group-text bg-white text-black fw-bold">
+                                <span class="oi oi-badge"></span>
+                                <label>Matrícula</label>
+                            </span>
+                            <input type="text"  class="form-control" 
+                                @bind-value="request.Matricula"/>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Fecha/Nacimiento</label>
+                                </span>
+                                <input type="date" class="form-control" 
+                                    @bind-value="request.FechaNacimiento" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Sexo</label>
+                                </span>
+                                <select class="form-select" @bind="request.Sexo">
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Hombre">Hombre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Nacionalidad</label>
+                                </span>
+                                <select class="form-select" @bind="request.Nacionalidad">
+                                    <option readonly>Select a Field</option>
+                                    <option value="Dominicano">Dominicano</option>
+                                    <option value="Haitiano">Haitiano</option>
+                                    <option value="Español">Español</option>
+                                    <option value="Italiano">Italiano</option>
+                                    <option value="Estadounidense">Estadounidense</option>
+                                    <option value="Venezolano">Venezolano</option>
+                                    <option value="Colombiano">Colombiano</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Telefono</label>
+                                </span>
+                                <input type="tel" class="form-control" 
+                                    @bind-value="request.Telefono" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Email</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Email" required/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Dirección</label>
+                                </span>
+                                <input type="text" class="form-control" 
+                                    @bind-value="request.Direccion" required/>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="card-subtitle mt-2 mb-2 text-muted fw-bold text-center">Datos becarios</h6>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>Carrera</label>
+                                </span>
+                                <select class="form-select" @bind="request.Carrera">
+                                    <option readonly>Select a Field of Study</option>
+                                    <option value="Informática">Informática</option>
+                                    <option value="Agropecuaria">Agropecuaria</option>
+                                    <option value="Mercadeo">Mercadeo</option>
+                                    <option value="Contabilidad">Contabilidad</option>
+                                    <option value="Derecho">Derecho</option>
+                                    <option value="Bioanálisis">Bioanálisis</option>
+                                    <option value="Geología">Geología</option>
+                                    <option value="Ingenieria-Civil">Ingeniería Civil</option>
+                                    <option value="Educación-Física">Educación Física</option>
+                                    <option value="Orientación-Escolar">Orientación Escolar</option>
+                                    <option value="Administración-Empresas">Administración de Empresas</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>¿Usted trabaja?</label>
+                                </span>
+                                <select class="form-select" @onchange="OnTrabajaChanged">
+                                    <option value="false" selected>No</option>
+                                    <option value="true">Si</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isTrabajando)
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group input-group mb-3">
+                                    <span class="input-group-text bg-white text-black fw-bold">
+                                        <label>Empleado</label>
+                                    </span>
+                                    <select class="form-select" @bind="request.Empleado">
+                                        <option value="Ninguno">Ninguno</option>
+                                        <option value="Público">Público</option>
+                                        <option value="Privado">Privado</option>
+                                        <option value="Auto-Empleado">Auto-Empleado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group input-group mb-3">
+                                    <span class="input-group-text bg-white text-black fw-bold">
+                                        <label>Sueldo</label>
+                                    </span>
+                                    <input type="number" class="form-control" 
+                                        @bind-value="request.Sueldo"/>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group input-group mb-3">
+                                <span class="input-group-text bg-white text-black fw-bold">
+                                    <label>¿Cuantos hijos tiene?</label>
+                                </span>
+                                <input type="number" class="form-control" 
+                                    @bind-value="request.NumeroHijos" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="modal-footer bg-dark text-white">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseCard">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="card col-12">
+        <div class="card-body">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Botones de acción -->
+                <div>
+                    <button class="btn btn-outline-success d-print-none" @onclick="ShowCard">
+                        <span class="oi oi-plus"></span>
+                    </button>
+                    @if(Role != "Student")
+                    {
+                        <button class="btn btn-outline-primary d-print-none" 
+                            @onclick="async ()=>{await PrintPageAsync();}">
+                            <span class="oi oi-print"></span>
+                        </button>
+                    }
+                    <button class="btn btn-outline-danger d-print-none" 
+                        @onclick='()=>{urlHelper.NavigateTo("/service");}'>
+                        <span class="oi oi-arrow-thick-left"></span>
+                    </button>
+                </div>
+                <!-- Encabezado -->
+                <h2 class="card-title mb-0">Becas Solicitadas</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-4">
+                    <div class="input-group d-print-none">
+                        <input type="text" class="form-control border-0 border-bottom" 
+                        placeholder="Buscar por nombre" @bind="Filtro">
+                        <button class="btn btn-outline input-group-text border-0 bg-white" 
+                            type="button" id="button-addon2" @onclick="()=>CargarDatos()">
+                            <span class="oi oi-magnifying-glass text-black"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-12 mt-2">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre completo</th>
+                            <th>Matrícula</th>
+                            <th>Sexo</th>
+                            <th>F/Nacimiento</th>
+                            <th>Nacionalidad</th>
+                            <th>Email</th>
+                            <th>Dirección</th>
+                            <th>Telefono</th>
+                            <th>Carrera</th>
+                            <th>Trabajo</th>
+                            <th>Hijos</th>
+                            @if(Role != "Student")
+                            {
+                                <th class="d-print-none">...</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Row in Becas)
+                        {
+                            <tr>
+                                <td>@Row.Id</td>
+                                <td>@Row.Nombre @Row.Apellidos</td>
+                                <td>@Row.Matricula</td>
+                                <td>@Row.Sexo</td>
+                                <td>@Row.FechaNacimiento</td>
+                                <td>@Row.Nacionalidad</td>
+                                <td>@Row.Email</td>
+                                <td>@Row.Direccion</td>
+                                <td>@FormatPhoneNumber(Row.Telefono)</td>
+                                <td>@Row.Carrera</td>
+                                <td>@Row.Empleado @Row.Sueldo</td>
+                                <td>@Row.NumeroHijos</td>
+                                @if(Role != "Student")
+                                {
+                                    <td class="d-print-none">
+                                        <button @onclick="()=>Seleccionar(Row.Id)"
+                                            class="btn btn-outline-warning">
+                                            <span class="oi oi-pencil"></span>
+                                        </button>
+                                        <button @onclick="()=>Eliminar(Row)"
+                                            class="btn btn-outline-danger">
+                                            <span class="oi oi-trash"></span>
+                                        </button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+@code {
+    public string TituloForm => request.Id == 0 ? 
+    "Solicitar Beca" : "Modificar Solicitud";
+    
+    public string Filtro { get; set; } = "";
+    public bool ShowForm { get; set; } = false;
+    public List<BecaResponse> Becas { get; set; } = new();
+    public BecaRequest request { get; set; } = new();
+    public bool showCard { get; set; } = false;
+    public string Message { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string SurName { get; set; } = "";
+    public string Matricula { get; set; } = "";
+    public string Role { get; set; } = "";
+    private bool isTrabajando = false;
+
+    private void OnTrabajaChanged(ChangeEventArgs e)
+    {
+        isTrabajando = e.Value?.ToString() == "true";
+        request.Trabaja = isTrabajando;
+    }
+
+    private string FormatPhoneNumber(string phoneNumber)
+    {
+         // Verifica si phoneNumber es null
+        if (phoneNumber != null && phoneNumber.Length == 10)
+        {
+            // Formatea el número telefónico
+            return $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si phoneNumber es null o no tiene la longitud esperada
+            return phoneNumber;
+        }
+    }
+    @* private string FormatCustomerId(string customerId)
+    {
+        // Verifica si el número telefónico tiene la longitud esperada
+        if (customerId != null && customerId.Length == 11)
+        {
+            // Formatea el número telefónico
+            return $"{customerId.Substring(0, 3)}-{customerId.Substring(3, 7)}-{customerId.Substring(10)}";
+        }
+        else
+        {
+            // Devuelve el número telefónico sin cambios si no tiene la longitud esperada
+            return customerId;
+        }
+    } *@
+    void ShowCard()
+    {
+        if(Role=="Student")
+        {
+            request.Nombre=Name;
+            request.Apellidos=SurName;
+            request.Matricula=Matricula;
+        }
+        showCard = true;
+    }
+
+    void CloseCard()
+    {
+        request  = new BecaRequest();
+        showCard = false;
+    }
+
+    async Task CargarDatos()
+    {
+        var resultado = await becaServices.Consultar(Filtro);
+        
+        if (resultado.Success)
+        {
+            if (Role == "Student")
+            {
+                // Filtra por la propiedad Matricula si el rol es "Student"
+                Becas = resultado.Data?
+                    .Where(u => u.Matricula == Matricula)
+                    .ToList();
+            }
+            else
+            {
+                // Si no es "Student", carga todas las tutorías
+                Becas = resultado.Data!;
+            }
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el estado de autenticación
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        // Verifica si el usuario está autenticado
+        if (user.Identity.IsAuthenticated)
+        {
+            // Extrae los valores de los reclamos y asigna las propiedades
+            Role = user.FindFirst(ClaimTypes.Role)?.Value ?? "";
+            Name = user.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            SurName = user.FindFirst(ClaimTypes.Surname)?.Value ?? "";
+            Matricula = user.FindFirst(ClaimTypes.SerialNumber)?.Value ?? "";
+        }
+
+        // Cargar los datos inicialmente
+        await CargarDatos();
+    }
+
+
+    void Cancelar()
+    {
+        request  = new BecaRequest();
+        showCard = false;
+    }
+    public async Task Send()
+    {
+        if(request.Id == 0)
+        {
+            //Debo registrar el contacto..
+            var r = await becaServices.Crear(request);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //Debo solicitar modificar el contacto...
+            var r = await becaServices.Modificar(request);
+            if (r.Success)
+            {
+                Cancelar();
+                await CargarDatos();
+                StateHasChanged();
+            }
+        }
+    }
+
+    public void Seleccionar(int Id)
+    {
+        showCard = true;
+        request = Becas
+        .Where(c => c.Id == Id)
+        .Select(c => c.ToRequest())
+        .FirstOrDefault() ?? new BecaRequest();
+    }
+    public async Task Eliminar(BecaResponse item)
+    {
+        var resultado = await becaServices.Eliminar(item.ToRequest());
+        if (resultado.Success)
+        {
+            await CargarDatos();
+            StateHasChanged();
+        }
+    }
+
+    private async Task PrintPageAsync()
+    {
+        // Llama a la función JavaScript para imprimir la página
+        await JSRuntime.InvokeVoidAsync("printPage");
+    }
+
+}
